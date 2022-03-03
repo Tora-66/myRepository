@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pretest</title>
+    <style>
+        nav{
+            background-color: lightgrey;
+            text-align: center;
+        }
+
+        nav a{
+            text-decoration: none;
+            padding: 50px;
+            display: inline;
+        }
+
+        nav a:hover{
+            font-weight: bold;
+        }
+
+        .error{
+            color: red;
+        }
+    </style>
+</head>
+<body ng-app="myApp">
+    <nav>
+        <a href="#/!">Home</a>
+        <a href="#!Food">Food</a>
+        <a href="#!Add">Add New Food</a>
+        <a href="#!About">About</a>
+    </nav>
+    <div ng-view></div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+    <script  src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular-route.js"></script>
+    <script>
+        var app = angular.module("myApp", ['ngRoute']);
+        app.config(function($routeProvider){
+            $routeProvider
+            .when("/", {
+                templateUrl: "home.html"
+            })
+            .when("/Food", {
+                templateUrl:"food.html"
+            })
+            .when("/Add",{
+                templateUrl:"add.html"
+            })
+            .when("/About",{
+                templateUrl:"about.html"
+            })
+        });
+
+        //tao bien mang list, chua danh sach cac mon an doc tu file food.json, bien toan cuc rootScope
+        app.run(function($rootScope, $http){
+            $http.get("food.json").then(function(rsp){
+                $rootScope.list = rsp.data.foodList;
+            })
+        })
+
+        app.controller("foodCtrl", function($scope){
+  
+
+        })
+
+        app.controller("addCtrl", function($scope){
+            $scope.add = function(){
+                //tao 1 doi tuong json tu du lieu nhap trong form
+                var newFood = {"id": $scope.uID, "name": $scope.uName, "price": $scope.uPrice};
+                $scope.list.push(newFood);
+                alert("Add new food successfully");
+            }
+        })
+    </script>
+</body>
+</html>
